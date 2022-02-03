@@ -1,3 +1,3 @@
-# FishingNetTopology
+# Fishing Net Topology
 
-A Novel Blockchain Structure Simulator for WSNs Based on IOTA Tangle
+A Novel Blockchain Structure for WSNs Based on IOTA Tangle
