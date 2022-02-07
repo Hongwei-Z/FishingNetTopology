@@ -1,5 +1,10 @@
+# Sample Test File
+
 import FNT
+import secrets
 
-node = FNT.Node(1, "data1", "Sensor0", 123)
+f = FNT.FishingNet(10)
+for i in range(16):
+    f.new_node(secrets.token_hex(16))
 
-node.toString()
+f.toString()
