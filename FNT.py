@@ -34,71 +34,74 @@ class FishingNet(object):
         self.rate = rate
         self.nodes = []
         self.tip_list = []
-        self.approve = 0
+
+        self.bound = triangularNums(self.rate)  # Triangular numbers, boundaries of the initial network
+        self.count_tri = math.comb(self.rate + 1, 2)  # Counting nodes in the initial network
+        self.group = self.rate * 2 - 1  # Each group of nodes, contains (rate * 2 - 1) nodes
 
     def nextNode(self, data):  # Create new node in FNT
-        self.tip_list.append([self.count, 0])  # Add new node to the tip list
-        bound = triangularNums(self.rate)  # Triangular numbers, boundaries of the initial net
-        count_tri = math.comb(self.rate + 1, 2)  # Counting nodes in the initial net
-        height = self.rate * 2 - 1
+        if self.count < self.count_tri:
+            self.tip_list.append([self.count, 0])  # Add new node to the tip list
 
         if self.count == 0:  # First node, #0, without tips
             node = Node(self.count, data, None, None)
             self.nodes.append(node)
 
-        elif 0 < self.count < count_tri:
+        elif 0 < self.count < self.count_tri:  # Nodes in the initial network
 
-            if self.count in bound:  # Boundaries of the initial net with one tip
+            if self.count in self.bound:  # Boundaries of the initial network with one tip
                 node = Node(self.count, data, self.nextTip(), None)
                 self.nodes.append(node)
-
-            else:  # Other nodes of the initial net with two tips
+            else:  # Other nodes of the initial network with two tips
                 node = Node(self.count, data, self.nextTip(), self.nextTip())
                 self.nodes.append(node)
-        else:
-            if self.atBoundary():
-                if (self.count - count_tri + 1) % height == self.rate:
-                    node = Node(self.count, data, self.nextTip(), self.nodes[self.count-self.rate+1].getIndex())
-                    self.nodes.append(node)
-                if (self.count - count_tri + 1) % height == 0:
-                    node = Node(self.count, data, self.nextTip(), self.nodes[self.count-self.rate].getIndex())
-                    self.nodes.append(node)
 
-            else:
-                node = Node(self.count, data, self.nodes[self.count-self.rate].getIndex(), self.nodes[self.count-self.rate+1].getIndex())
-                self.nodes.append(node)
+        else:  # Nodes in the formal network
+            node = Node(self.count, data, self.nextTipGroup()[0], self.nextTipGroup()[1])
+            self.nodes.append(node)
 
         self.count += 1
 
-    def nextTip(self):
-        bound = triangularNums(self.rate)  # Triangular numbers, boundaries of the initial net
-        count_tri = math.comb(self.rate + 1, 2)  # Counting nodes in the initial net
-        height = self.rate * 2 - 1
-
-        if self.tip_list[0][1] >= 2:  # If node is approved twice, remove from the tip list
-            self.tip_list.pop(0)
+    def nextTip(self):  # Tips for the initial network
 
         tip = self.tip_list[0][0]
         self.tip_list[0][1] += 1
 
-        if self.count > count_tri:
-            if self.atBoundary():
-                tip = (self.nodes[self.count - height].getIndex())
-                self.tip_list[0][1] += 1
+        if self.tip_list[0][1] >= 2:  # If node is approved twice, remove from the tip list
+            self.tip_list.pop(0)
+
+        if self.count_tri < self.count and self.atBoundary():  # Last column of the initial network
+            tip = (self.nodes[self.count - self.group].getIndex())
+            self.tip_list[0][1] += 1
 
         return tip
 
-    def atBoundary(self):
-        count_tri = math.comb(self.rate + 1, 2)  # Counting nodes in the initial net
-        height = self.rate * 2 - 1
-        return (self.count - count_tri + 1) % height in [0, self.rate]
+    def nextTipGroup(self):  # Tips for the formal network
+        if self.atBoundary():  # Tips for boundary nodes
+
+            if self.upper():  # Tips for upper bound nodes
+                return [self.nextTip(), self.nodes[self.count - self.rate + 1].getIndex()]
+            else:  # Tips for lower bound nodes
+                return [self.nextTip(), self.nodes[self.count - self.rate].getIndex()]
+
+        else:  # Tips for other nodes
+            return [self.nodes[self.count - self.rate].getIndex(), self.nodes[self.count - self.rate + 1].getIndex()]
+
+    def atBoundary(self):  # Determine whether a node is on the boundary
+        return (self.count - self.count_tri + 1) % self.group in [0, self.rate]
+
+    def upper(self):  # Determine whether a node is on the upper or lower boundary
+        if (self.count - self.count_tri + 1) % self.group == self.rate:
+            return True
+        if (self.count - self.count_tri + 1) % self.group == 0:
+            return False
 
     def toString(self):
         for i in range(len(self.nodes)):
             self.nodes[i].toString()
 
 
-def triangularNums(r):
+def triangularNums(r):  # Generate a list of with triangular numbers
     nums = []
     for n in range(1, r):
         upper = int(n * (n + 1) / 2)
