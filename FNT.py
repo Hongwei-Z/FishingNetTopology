@@ -4,19 +4,21 @@ import math
 class Node(object):
 
     # A node may contain index, data, two tips, and other info
-    def __init__(self, index, data, tip1, tip2):
+    def __init__(self, index, data, time, tip1, tip2):
         self.index = index
         self.data = data
         self.tip1 = tip1
         self.tip2 = tip2
-        # self.source = source
-        # self.time = time
+        self.time = time
 
     def getIndex(self):
         return self.index
 
     def getData(self):
         return self.data
+
+    def getTime(self):
+        return self.time
 
     def getTips(self):
         if self.tip1 is None and self.tip2 is None:
@@ -28,15 +30,9 @@ class Node(object):
         else:
             return [self.tip1.getIndex(), self.tip2.getIndex()]
 
-    # def getSource(self):
-    #     return self.source
-    #
-    # def getTime(self):
-    #     return self.time
-
     def toString(self):
-        print("Node {0}, Data: {1}, Tips: {2}"
-              .format(self.getIndex(), self.getData(), self.getTips()))
+        print("Node {0}, Data: {1}, {2}, Tips: {3}"
+              .format(self.getIndex(), self.getData(), self.getTime(), self.getTips()))
 
 
 class FishingNet(object):
@@ -52,20 +48,20 @@ class FishingNet(object):
         self.count_tri = math.comb(self.rate + 1, 2)  # Counting nodes in the initial network
         self.group = self.rate * 2 - 1  # Each group of nodes, contains (rate * 2 - 1) nodes
 
-    def nextNode(self, data):  # Create new node in FNT
+    def nextNode(self, data, time):  # Create new node in FNT
 
         if self.count == 0:  # First node, #0, without tips
-            node = Node(self.count, data, None, None)
+            node = Node(self.count, data, time, None, None)
 
         elif 0 < self.count < self.count_tri:  # Nodes in the initial network
 
             if self.count in self.bound:  # Boundaries of the initial network with one tip
-                node = Node(self.count, data, self.nextTip(), None)
+                node = Node(self.count, data, time, self.nextTip(), None)
             else:  # Other nodes of the initial network with two tips
-                node = Node(self.count, data, self.nextTip(), self.nextTip())
+                node = Node(self.count, data, time, self.nextTip(), self.nextTip())
 
         else:  # Nodes in the formal network
-            node = Node(self.count, data, self.nextTipGroup()[0], self.nextTipGroup()[1])
+            node = Node(self.count, data, time, self.nextTipGroup()[0], self.nextTipGroup()[1])
 
         self.tip_list.append([node, 0])
         self.nodes.append(node)
@@ -90,11 +86,25 @@ class FishingNet(object):
 
             if self.upper():  # Tips for upper bound nodes
                 return [self.nextTip(), self.nodes[self.count - self.rate + 1]]
+
             else:  # Tips for lower bound nodes
                 return [self.nextTip(), self.nodes[self.count - self.rate]]
 
         else:  # Tips for other nodes
             return [self.nodes[self.count - self.rate], self.nodes[self.count - self.rate + 1]]
+
+    def findNode(self, index):
+        return self.nodes[index]
+
+    def findTipsIndex(self, index):
+        return self.nodes[index].getTips()
+
+    def findTipsData(self, index):
+        return [self.nodes[index].tip1, self.nodes[index].tip2]
+
+    def toString(self):
+        for i in range(len(self.nodes)):
+            self.nodes[i].toString()
 
     def atBoundary(self):  # Determine whether a node is on the boundary
         return (self.count - self.count_tri + 1) % self.group in [0, self.rate]
@@ -104,10 +114,6 @@ class FishingNet(object):
             return True
         if (self.count - self.count_tri + 1) % self.group == 0:
             return False
-
-    def toString(self):
-        for i in range(len(self.nodes)):
-            self.nodes[i].toString()
 
 
 def triangularNums(r):  # Generate a list of with triangular numbers
