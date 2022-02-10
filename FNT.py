@@ -7,9 +7,10 @@ class Node(object):
     def __init__(self, index, data, time, tip1, tip2):
         self.index = index
         self.data = data
+        self.time = time
         self.tip1 = tip1
         self.tip2 = tip2
-        self.time = time
+        self.approve = []
 
     def getIndex(self):
         return self.index
@@ -43,6 +44,7 @@ class FishingNet(object):
         self.rate = rate
         self.nodes = []
         self.tip_list = []
+        self.follower = []
 
         self.bound = triangularNums(self.rate)  # Triangular numbers, boundary of the initial network
         self.count_tri = math.comb(self.rate + 1, 2)  # Counting nodes in the initial network
@@ -56,12 +58,23 @@ class FishingNet(object):
         elif 0 < self.count < self.count_tri:  # Nodes in the initial network
 
             if self.count in self.bound:  # Boundaries of the initial network with one tip
-                node = Node(self.count, data, time, self.nextTip(), None)
+                t = self.nextTip()
+                node = Node(self.count, data, time, t, None)
+                t.approve.append(node)
+
             else:  # Other nodes of the initial network with two tips
-                node = Node(self.count, data, time, self.nextTip(), self.nextTip())
+                t1 = self.nextTip()
+                t2 = self.nextTip()
+                node = Node(self.count, data, time, t1, t2)
+                t1.approve.append(node)
+                t2.approve.append(node)
 
         else:  # Nodes in the formal network
-            node = Node(self.count, data, time, self.nextTipGroup()[0], self.nextTipGroup()[1])
+            t1 = self.nextTipGroup()[0]
+            t2 = self.nextTipGroup()[1]
+            node = Node(self.count, data, time, t1, t2)
+            t1.approve.append(node)
+            t2.approve.append(node)
 
         self.tip_list.append([node, 0])
         self.nodes.append(node)
@@ -94,13 +107,49 @@ class FishingNet(object):
             return [self.nodes[self.count - self.rate], self.nodes[self.count - self.rate + 1]]
 
     def findNode(self, index):
-        return self.nodes[index]
+        if index >= self.count:
+            return
+        else:
+            return self.nodes[index]
 
     def findTipsIndex(self, index):
-        return self.nodes[index].getTips()
+        if index >= self.count:
+            return
+        else:
+            return self.nodes[index].getTips()
 
     def findTipsData(self, index):
-        return [self.nodes[index].tip1, self.nodes[index].tip2]
+        if index >= self.count:
+            return
+        else:
+            return [self.nodes[index].tip1, self.nodes[index].tip2]
+
+    def findApprove(self, index):
+        if index not in self.follower:
+            self.follower.append(index)
+
+        if index >= self.count:
+            return
+        if len(self.nodes[index].approve) == 0:
+            return
+        elif len(self.nodes[index].approve) == 1:
+            return [self.nodes[index].approve[0].getIndex(), None]
+        else:
+            return [self.nodes[index].approve[0].getIndex(), self.nodes[index].approve[1].getIndex()]
+
+    def cw(self, index):
+        if len(self.nodes[index].approve) == 0:
+            return 1
+        elif len(self.nodes[index].approve) == 1:
+            return 1 + self.cw(self.findApprove(index)[0])
+        else:
+            return 1 + self.cw(self.findApprove(index)[0]) + self.cw(self.findApprove(index)[1])
+
+    def findCW(self, index):
+        if index >= self.count:
+            return
+        self.cw(index)
+        return len(self.follower)
 
     def toString(self):
         for i in range(len(self.nodes)):
