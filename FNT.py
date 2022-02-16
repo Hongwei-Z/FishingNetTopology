@@ -11,6 +11,7 @@ class Node(object):
         self.tip1 = tip1
         self.tip2 = tip2
         self.approve = []
+        self.disable = False
 
     def getIndex(self):
         return self.index
@@ -21,13 +22,17 @@ class Node(object):
     def getTime(self):
         return self.time
 
-    def getTips(self):
+    def getTips(self):  # Return index of two tips
+
         if self.tip1 is None and self.tip2 is None:
             return [None, None]
+
         elif self.tip1 is not None and self.tip2 is None:
             return [self.tip1.getIndex(), None]
+
         elif self.tip2 is not None and self.tip1 is None:
             return [None, self.tip2.getIndex()]
+
         else:
             return [self.tip1.getIndex(), self.tip2.getIndex()]
 
@@ -95,6 +100,7 @@ class FishingNet(object):
         return tip
 
     def nextTipGroup(self):  # Tips for the formal network
+
         if self.atBoundary():  # Tips for boundary nodes
 
             if self.upper():  # Tips for upper bound nodes
@@ -106,54 +112,90 @@ class FishingNet(object):
         else:  # Tips for other nodes
             return [self.nodes[self.count - self.rate], self.nodes[self.count - self.rate + 1]]
 
-    def findNode(self, index):
+    def findNode(self, index):  # Find and return the node
         if index >= self.count:
             return
         else:
             return self.nodes[index]
 
-    def findTipsIndex(self, index):
+    def disableNode(self, index):  # Detach a node
+
+        if index >= self.count:
+            return
+
+        else:
+
+            # Find related nodes and detach
+            x = int(self.findApprove(index)[0])
+            y = int(self.findApprove(index)[1])
+            t1 = self.nodes[x].getTips()
+            t2 = self.nodes[y].getTips()
+
+            if t1[0] == index:
+                self.nodes[x].tip1 = None
+            if t1[1] == index:
+                self.nodes[x].tip2 = None
+            if t2[0] == index:
+                self.nodes[y].tip1 = None
+            if t2[1] == index:
+                self.nodes[y].tip2 = None
+
+        self.nodes[index].disable = True  # Disable the node
+
+    def findTipsIndex(self, index):  # Return index of two tips
         if index >= self.count:
             return
         else:
             return self.nodes[index].getTips()
 
-    def findTipsData(self, index):
+    def findTipsData(self, index):  # Return data of two tips
         if index >= self.count:
             return
         else:
             return [self.nodes[index].tip1, self.nodes[index].tip2]
 
-    def findApprove(self, index):
+    def findApprove(self, index):  # Return two nodes that approve this node
         if index not in self.follower:
             self.follower.append(index)
 
         if index >= self.count:
-            return
+            return [None, None]
+
         if len(self.nodes[index].approve) == 0:
-            return
+            return [None, None]
+
         elif len(self.nodes[index].approve) == 1:
             return [self.nodes[index].approve[0].getIndex(), None]
+
         else:
             return [self.nodes[index].approve[0].getIndex(), self.nodes[index].approve[1].getIndex()]
 
-    def cw(self, index):
-        if len(self.nodes[index].approve) == 0:
-            return 1
-        elif len(self.nodes[index].approve) == 1:
-            return 1 + self.cw(self.findApprove(index)[0])
-        else:
-            return 1 + self.cw(self.findApprove(index)[0]) + self.cw(self.findApprove(index)[1])
+    def cw(self, index):  # Counting all related nodes
+        ap1 = self.findApprove(index)[0]
+        ap2 = self.findApprove(index)[1]
 
-    def findCW(self, index):
+        if ap1 is None and ap2 is None:
+            return 0
+
+        if ap1 is not None and ap2 is None:
+            return 1 + self.cw(ap1)
+
+        if ap1 is not None and ap2 is not None:
+            return 2 + self.cw(ap1) + self.cw(ap2)
+
+    def findCW(self, index):  # Return cumulative weight
         if index >= self.count:
-            return
+            return 0
         self.cw(index)
         return len(self.follower)
 
-    def toString(self):
+    def toString(self):  # Print all nodes
         for i in range(len(self.nodes)):
-            self.nodes[i].toString()
+
+            if self.nodes[i].disable is True:
+                print("Node {0} disabled".format(i))
+            else:
+                self.nodes[i].toString()
 
     def atBoundary(self):  # Determine whether a node is on the boundary
         return (self.count - self.count_tri + 1) % self.group in [0, self.rate]
