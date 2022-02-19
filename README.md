@@ -4,11 +4,11 @@
 
 ### Structural Demonstration:
 #### Example with the rate of 10, including 1000 nodes.
-![FNT Structure Display](FNT_Structure.png)
+![FNT Structure Display](image/FNT_Structure.png)
 
 ### Structural Explanation:
 #### Example with the rate of 6, including 100 nodes.
-![FNT Structure Explain](Explain.png)
+![FNT Structure Explain](image/Explain.png)
 
 ### Files:
 - [FNT:](FNT.py)

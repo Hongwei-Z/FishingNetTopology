@@ -3,8 +3,6 @@ import math
 import networkx as nx
 import matplotlib.pyplot as plt
 
-import FNT
-
 
 def draw_FNT(rate, total_nodes):
     fnt = nx.DiGraph()
