@@ -3,6 +3,8 @@ import math
 import networkx as nx
 import matplotlib.pyplot as plt
 
+import FNT
+
 
 def draw_FNT(rate, total_nodes):
     fnt = nx.DiGraph()
@@ -95,7 +97,7 @@ def draw_FNT(rate, total_nodes):
         else:
             s = 0
 
-    plt.figure(1, figsize=(30, 15))
+    plt.figure(1, figsize=(30, 20))
     nx.draw(fnt, position, with_labels=True)
     plt.show()
     print("Fishing Net Topology")

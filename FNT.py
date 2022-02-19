@@ -180,6 +180,9 @@ class FishingNet(object):
         if ap1 is not None and ap2 is None:
             return 1 + self.cw(ap1)
 
+        if ap1 is None and ap2 is not None:
+            return 1 + self.cw(ap2)
+
         if ap1 is not None and ap2 is not None:
             return 2 + self.cw(ap1) + self.cw(ap2)
 
