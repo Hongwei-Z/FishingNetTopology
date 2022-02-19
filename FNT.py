@@ -49,7 +49,7 @@ class FishingNet(object):
         self.rate = rate
         self.nodes = []
         self.tip_list = []
-        self.follower = []
+        self.cwRelated = []
 
         self.bound = triangularNums(self.rate)  # Triangular numbers, boundary of the initial network
         self.count_tri = math.comb(self.rate + 1, 2)  # Counting nodes in the initial network
@@ -113,8 +113,10 @@ class FishingNet(object):
             return [self.nodes[self.count - self.rate], self.nodes[self.count - self.rate + 1]]
 
     def findNode(self, index):  # Find and return the node
+
         if index >= self.count:
             return
+
         else:
             return self.nodes[index]
 
@@ -143,20 +145,25 @@ class FishingNet(object):
         self.nodes[index].disable = True  # Disable the node
 
     def findTipsIndex(self, index):  # Return index of two tips
+
         if index >= self.count:
             return
+
         else:
             return self.nodes[index].getTips()
 
     def findTipsData(self, index):  # Return data of two tips
+
         if index >= self.count:
             return
+
         else:
             return [self.nodes[index].tip1, self.nodes[index].tip2]
 
     def findApprove(self, index):  # Return two nodes that approve this node
-        if index not in self.follower:
-            self.follower.append(index)
+
+        if index not in self.cwRelated:
+            self.cwRelated.append(index)
 
         if index >= self.count:
             return [None, None]
@@ -171,6 +178,7 @@ class FishingNet(object):
             return [self.nodes[index].approve[0].getIndex(), self.nodes[index].approve[1].getIndex()]
 
     def cw(self, index):  # Counting all related nodes
+
         ap1 = self.findApprove(index)[0]
         ap2 = self.findApprove(index)[1]
 
@@ -187,16 +195,24 @@ class FishingNet(object):
             return 2 + self.cw(ap1) + self.cw(ap2)
 
     def findCW(self, index):  # Return cumulative weight
+
         if index >= self.count:
             return 0
+
         self.cw(index)
-        return len(self.follower)
+
+        result = len(self.cwRelated)
+        self.cwRelated.clear()
+
+        return result
 
     def toString(self):  # Print all nodes
+
         for i in range(len(self.nodes)):
 
             if self.nodes[i].disable is True:
                 print("Node {0} disabled".format(i))
+
             else:
                 self.nodes[i].toString()
 
@@ -204,17 +220,21 @@ class FishingNet(object):
         return (self.count - self.count_tri + 1) % self.group in [0, self.rate]
 
     def upper(self):  # Determine whether a node is on the upper or lower boundary
+
         if (self.count - self.count_tri + 1) % self.group == self.rate:
             return True
+
         if (self.count - self.count_tri + 1) % self.group == 0:
             return False
 
 
 def triangularNums(r):  # Generate a list of with triangular numbers
     nums = []
+
     for n in range(1, r):
         upper = int(n * (n + 1) / 2)
         lower = upper + n
         nums.append(upper)
         nums.append(lower)
+
     return nums

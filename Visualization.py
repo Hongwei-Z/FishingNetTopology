@@ -1,10 +1,11 @@
-# This file only used to draw the graph of FNT
+# This file only used to draw graphs of FNT
 import math
 import networkx as nx
 import matplotlib.pyplot as plt
+import numpy as np
 
 
-def draw_FNT(rate, total_nodes):
+def drawFNT(rate, total_nodes):
     fnt = nx.DiGraph()
 
     # Compute the number of nodes in triangle, and the rest nodes
@@ -100,3 +101,25 @@ def draw_FNT(rate, total_nodes):
     plt.show()
     print("Fishing Net Topology")
     print("Rate of {0}, {1} nodes.".format(rate, total_nodes))
+
+
+def drawCW(f):
+    cw = []
+    n = []
+
+    for t in range(f.count):  # Compute cw for each node
+        cw.append(f.findCW(t))
+        n.append(t)
+
+    # Draw the line chart for cw
+    plt.figure(2, figsize=(30, 20))
+    plt.xlabel("Node Number")
+    plt.ylabel("Cumulative Weight")
+    plt.xticks(np.arange(0, f.count, 1))
+    plt.yticks(np.arange(0, f.count, 1))
+
+    plt.plot(n, cw, linewidth=3, color='b', marker='o', markerfacecolor='r')
+    for a in range(len(cw)):
+        plt.text(n[a], cw[a], cw[a], ha='center', va='bottom', fontsize=15)
+
+    plt.show()
