@@ -10,6 +10,7 @@ class Node(object):
         self.time = time
         self.tip1 = tip1
         self.tip2 = tip2
+
         self.approve = []
         self.disable = False
 
@@ -48,7 +49,7 @@ class FishingNet(object):
         self.count = 0
         self.rate = rate
         self.nodes = []
-        self.tip_list = []
+        self.tipList = []
         self.cwRelated = []
 
         self.bound = triangularNums(self.rate)  # Triangular numbers, boundary of the initial network
@@ -63,11 +64,13 @@ class FishingNet(object):
         elif 0 < self.count < self.countTri:  # Nodes in the initial network
 
             if self.count in self.bound:  # Boundaries of the initial network with one tip
+
                 t = self.nextTip()
                 node = Node(self.count, data, time, t, None)
                 t.approve.append(node)
 
             else:  # Other nodes of the initial network with two tips
+
                 t1 = self.nextTip()
                 t2 = self.nextTip()
                 node = Node(self.count, data, time, t1, t2)
@@ -75,27 +78,28 @@ class FishingNet(object):
                 t2.approve.append(node)
 
         else:  # Nodes in the formal network
+
             t1 = self.nextTipGroup()[0]
             t2 = self.nextTipGroup()[1]
             node = Node(self.count, data, time, t1, t2)
             t1.approve.append(node)
             t2.approve.append(node)
 
-        self.tip_list.append([node, 0])
+        self.tipList.append([node, 0])
         self.nodes.append(node)
         self.count += 1
 
     def nextTip(self):  # Tips for the initial network
 
-        tip = self.tip_list[0][0]
-        self.tip_list[0][1] += 1
+        tip = self.tipList[0][0]
+        self.tipList[0][1] += 1
 
-        if self.tip_list[0][1] >= 2:  # If node is approved twice, remove from the tip list
-            self.tip_list.pop(0)
+        if self.tipList[0][1] >= 2:  # If node is approved twice, remove from the tip list
+            self.tipList.pop(0)
 
         if self.countTri < self.count and self.atBoundary():  # Last column of the initial network
             tip = (self.nodes[self.count - self.group])
-            self.tip_list[0][1] += 1
+            self.tipList[0][1] += 1
 
         return tip
 
