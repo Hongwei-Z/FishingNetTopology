@@ -36,8 +36,8 @@ class Node(object):
         else:
             return [self.tip1.getIndex(), self.tip2.getIndex()]
 
-    def toString(self):
-        print("Node {0}, Data: {1}, {2}, Tips: {3}"
+    def printNode(self):
+        print("Node {0}, {1}, {2}, Tips: {3}"
               .format(self.getIndex(), self.getData(), self.getTime(), self.getTips()))
 
 
@@ -52,7 +52,7 @@ class FishingNet(object):
         self.cwRelated = []
 
         self.bound = triangularNums(self.rate)  # Triangular numbers, boundary of the initial network
-        self.count_tri = math.comb(self.rate + 1, 2)  # Counting nodes in the initial network
+        self.countTri = math.comb(self.rate + 1, 2)  # Counting nodes in the initial network
         self.group = self.rate * 2 - 1  # Each group of nodes, contains (rate * 2 - 1) nodes
 
     def nextNode(self, data, time):  # Create new node in FNT
@@ -60,7 +60,7 @@ class FishingNet(object):
         if self.count == 0:  # First node, #0, without tips
             node = Node(self.count, data, time, None, None)
 
-        elif 0 < self.count < self.count_tri:  # Nodes in the initial network
+        elif 0 < self.count < self.countTri:  # Nodes in the initial network
 
             if self.count in self.bound:  # Boundaries of the initial network with one tip
                 t = self.nextTip()
@@ -93,7 +93,7 @@ class FishingNet(object):
         if self.tip_list[0][1] >= 2:  # If node is approved twice, remove from the tip list
             self.tip_list.pop(0)
 
-        if self.count_tri < self.count and self.atBoundary():  # Last column of the initial network
+        if self.countTri < self.count and self.atBoundary():  # Last column of the initial network
             tip = (self.nodes[self.count - self.group])
             self.tip_list[0][1] += 1
 
@@ -118,7 +118,7 @@ class FishingNet(object):
             return
 
         else:
-            return self.nodes[index]
+            return self.nodes[index].printNode()
 
     def disableNode(self, index):  # Detach a node
 
@@ -144,23 +144,30 @@ class FishingNet(object):
 
         self.nodes[index].disable = True  # Disable the node
 
-    def findTipsIndex(self, index):  # Return index of two tips
+    def findTips(self, index):  # Return two tips
 
         if index >= self.count:
             return
 
         else:
-            return self.nodes[index].getTips()
 
-    def findTipsData(self, index):  # Return data of two tips
+            # Index of two tips
+            n1 = self.nodes[index].getTips()[0]
+            n2 = self.nodes[index].getTips()[1]
 
-        if index >= self.count:
-            return
+            if n1 is None:
+                t1 = None
+            else:
+                t1 = self.findNode(n1)
 
-        else:
-            return [self.nodes[index].tip1, self.nodes[index].tip2]
+            if n2 is None:
+                t2 = None
+            else:
+                t2 = self.findNode(n2)
 
-    def findApprove(self, index):  # Return two nodes that approve this node
+            return [t1, t2]
+
+    def findApprove(self, index):  # Return the index of two nodes that approve this node
 
         if index not in self.cwRelated:
             self.cwRelated.append(index)
@@ -172,10 +179,13 @@ class FishingNet(object):
             return [None, None]
 
         elif len(self.nodes[index].approve) == 1:
-            return [self.nodes[index].approve[0].getIndex(), None]
+            ap1 = self.nodes[index].approve[0].getIndex()
+            return [ap1, None]
 
         else:
-            return [self.nodes[index].approve[0].getIndex(), self.nodes[index].approve[1].getIndex()]
+            ap1 = self.nodes[index].approve[0].getIndex()
+            ap2 = self.nodes[index].approve[1].getIndex()
+            return [ap1, ap2]
 
     def cw(self, index):  # Counting all related nodes
 
@@ -206,7 +216,7 @@ class FishingNet(object):
 
         return result
 
-    def toString(self):  # Print all nodes
+    def printFNT(self):  # Print all nodes
 
         for i in range(len(self.nodes)):
 
@@ -214,17 +224,17 @@ class FishingNet(object):
                 print("Node {0} disabled".format(i))
 
             else:
-                self.nodes[i].toString()
+                self.nodes[i].printNode()
 
     def atBoundary(self):  # Determine whether a node is on the boundary
-        return (self.count - self.count_tri + 1) % self.group in [0, self.rate]
+        return (self.count - self.countTri + 1) % self.group in [0, self.rate]
 
     def upper(self):  # Determine whether a node is on the upper or lower boundary
 
-        if (self.count - self.count_tri + 1) % self.group == self.rate:
+        if (self.count - self.countTri + 1) % self.group == self.rate:
             return True
 
-        if (self.count - self.count_tri + 1) % self.group == 0:
+        if (self.count - self.countTri + 1) % self.group == 0:
             return False
 
 
