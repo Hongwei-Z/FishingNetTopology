@@ -208,17 +208,28 @@ class FishingNet(object):
         if ap1 is not None and ap2 is not None:
             return 2 + self.cw(ap1) + self.cw(ap2)
 
-    def findCW(self, index):  # Return cumulative weight
+    def findCW(self, index, export=False):  # Return cumulative weight
 
         if index >= self.count:
             return 0
 
+        if index == 0:
+            return self.count
+
         self.cw(index)
+
+        if export:  # Print all nodes followed this node
+            self.cwRelated.sort()
+            for j in self.cwRelated:
+                self.findNode(j)
 
         result = len(self.cwRelated)
         self.cwRelated.clear()
 
         return result
+
+    def findSubnet(self, index):  # Return all nodes that directly or indirectly approved this node
+        return self.findCW(index, True)
 
     def printFNT(self):  # Print all nodes
 
