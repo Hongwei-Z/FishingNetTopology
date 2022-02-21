@@ -118,6 +118,9 @@ class FishingNet(object):
 
     def findNode(self, index):  # Find and return the node
 
+        if index is None:
+            return
+
         if index >= self.count:
             return
 
@@ -132,8 +135,8 @@ class FishingNet(object):
         else:
 
             # Find related nodes and detach
-            x = int(self.findApprove(index)[0])
-            y = int(self.findApprove(index)[1])
+            x = int(self.getAp(index)[0])
+            y = int(self.getAp(index)[1])
             t1 = self.nodes[x].getTips()
             t2 = self.nodes[y].getTips()
 
@@ -153,25 +156,14 @@ class FishingNet(object):
         if index >= self.count:
             return
 
-        else:
+        # Index of two tips
+        n1 = self.nodes[index].getTips()[0]
+        n2 = self.nodes[index].getTips()[1]
 
-            # Index of two tips
-            n1 = self.nodes[index].getTips()[0]
-            n2 = self.nodes[index].getTips()[1]
+        self.findNode(n1)
+        self.findNode(n2)
 
-            if n1 is None:
-                t1 = None
-            else:
-                t1 = self.findNode(n1)
-
-            if n2 is None:
-                t2 = None
-            else:
-                t2 = self.findNode(n2)
-
-            return [t1, t2]
-
-    def findApprove(self, index):  # Return the index of two nodes that approve this node
+    def getAp(self, index):  # Return the index of two nodes that approve this node
 
         if index not in self.cwRelated:
             self.cwRelated.append(index)
@@ -191,10 +183,14 @@ class FishingNet(object):
             ap2 = self.nodes[index].approve[1].getIndex()
             return [ap1, ap2]
 
+    def findApprove(self, index):  # Print two nodes that approve this node
+        self.findNode(self.getAp(index)[0])
+        self.findNode(self.getAp(index)[1])
+
     def cw(self, index):  # Counting all related nodes
 
-        ap1 = self.findApprove(index)[0]
-        ap2 = self.findApprove(index)[1]
+        ap1 = self.getAp(index)[0]
+        ap2 = self.getAp(index)[1]
 
         if ap1 is None and ap2 is None:
             return 0
@@ -222,6 +218,7 @@ class FishingNet(object):
             self.cwRelated.sort()
             for j in self.cwRelated:
                 self.findNode(j)
+            return
 
         result = len(self.cwRelated)
         self.cwRelated.clear()
