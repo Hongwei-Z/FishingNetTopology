@@ -124,30 +124,27 @@ class FishingNet(object):
         if index >= self.count:
             return
 
-        else:
-            return self.nodes[index].printNode()
+        return self.nodes[index].printNode()
 
     def disableNode(self, index):  # Detach a node
 
         if index >= self.count:
             return
 
-        else:
+        # Find related nodes and detach
+        x = int(self.getAp(index)[0])
+        y = int(self.getAp(index)[1])
+        t1 = self.nodes[x].getTips()
+        t2 = self.nodes[y].getTips()
 
-            # Find related nodes and detach
-            x = int(self.getAp(index)[0])
-            y = int(self.getAp(index)[1])
-            t1 = self.nodes[x].getTips()
-            t2 = self.nodes[y].getTips()
-
-            if t1[0] == index:
-                self.nodes[x].tip1 = None
-            if t1[1] == index:
-                self.nodes[x].tip2 = None
-            if t2[0] == index:
-                self.nodes[y].tip1 = None
-            if t2[1] == index:
-                self.nodes[y].tip2 = None
+        if t1[0] == index:
+            self.nodes[x].tip1 = None
+        if t1[1] == index:
+            self.nodes[x].tip2 = None
+        if t2[0] == index:
+            self.nodes[y].tip1 = None
+        if t2[1] == index:
+            self.nodes[y].tip2 = None
 
         self.nodes[index].disable = True  # Disable the node
 
