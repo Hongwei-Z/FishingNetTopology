@@ -2,14 +2,15 @@ import math
 import networkx as nx
 import matplotlib.pyplot as plt
 import numpy as np
+import FNT
 
 
-def drawFNT(rate, totalNodes):
+def drawFNT(rate, size):  # Draw the FNT graph
     fnt = nx.DiGraph()
 
     # Compute the number of nodes in triangle, and the rest nodes
     nodes1 = math.comb(rate + 1, 2)
-    nodes2 = totalNodes - nodes1
+    nodes2 = size - nodes1
 
     position = []  # Position of nodes
 
@@ -49,7 +50,7 @@ def drawFNT(rate, totalNodes):
         index += 1
 
     # Create nodes
-    for k in range(totalNodes):
+    for k in range(size):
         fnt.add_node(k, pos=position[k])
 
     # Add edges for all nodes in the triangle
@@ -75,13 +76,13 @@ def drawFNT(rate, totalNodes):
     r = nodes1
     s = 0
 
-    while r < totalNodes:
+    while r < size:
 
         if s < rate - 1:
 
             for j in range(rate - 1):
 
-                if r < totalNodes:
+                if r < size:
                     fnt.add_edge(r, r - diff2[0][0])
                     fnt.add_edge(r, r - diff2[0][1])
                     r += 1
@@ -96,13 +97,13 @@ def drawFNT(rate, totalNodes):
 
             for j in range(rate - 2):
 
-                if r < totalNodes:
+                if r < size:
                     fnt.add_edge(r, r - diff2[0][0])
                     fnt.add_edge(r, r - diff2[0][1])
                     r += 1
                     s += 1
 
-            if r < totalNodes:
+            if r < size:
                 fnt.add_edge(r, r - diff2[1][1])
                 fnt.add_edge(r, r - columns)
                 r += 1
@@ -116,10 +117,10 @@ def drawFNT(rate, totalNodes):
     plt.show()
 
     print("Fishing Net Topology")
-    print("Rate of {0}, {1} nodes.".format(rate, totalNodes))
+    print("Rate of {0}, {1} nodes.".format(rate, size))
 
 
-def drawCW(f):
+def drawCWs(f):  # Draw a graph to display the CWs of all nodes
     cw = []
     n = []
 
@@ -129,11 +130,35 @@ def drawCW(f):
 
     # Draw the line chart for cw
     plt.figure(2, figsize=(30, 20))
-    plt.xlabel("Node Number")
+    plt.title("Cumulative weight of all nodes")
+    plt.xlabel("Node Index")
     plt.ylabel("Cumulative Weight")
     plt.xticks(np.arange(0, f.count, 1))
-    plt.yticks(np.arange(0, f.count, 1))
     plt.plot(n, cw, linewidth=3, color='b', marker='o', markerfacecolor='r')
     for a in range(len(cw)):
-        plt.text(n[a], cw[a], cw[a], ha='center', va='bottom', fontsize=15)
+        plt.text(n[a], cw[a], cw[a], ha='center', va='bottom', fontsize=20)
+    plt.show()
+
+
+def drawCWChg(rate, size, index):
+    # Draw a graph of the change of the CW of a node as the number of nodes increases
+
+    cws = []
+    interval = []
+    f = FNT.FishingNet(rate)
+
+    for b in range(size):
+        f.nextNode(None, None)
+        if b % 10 == 0:
+            cws.append(f.findCW(index))
+            interval.append(b)
+
+    plt.figure(3, figsize=(15, 10))
+    plt.title("The cumulative weight of node " + str(index) + " changes as the number of nodes increases")
+    plt.xlabel("Total Nodes")
+    plt.ylabel("Cumulative Weight of Node " + str(index))
+    plt.xticks(np.arange(0, size, 10))
+    for c in range(len(cws)):
+        plt.text(interval[c], cws[c], cws[c], ha='center', va='bottom', fontsize=20)
+    plt.plot(interval, cws, linewidth=3, color='b', marker='o', markerfacecolor='r')
     plt.show()

@@ -7,14 +7,14 @@
 
 ### Files:
 - **[FNT:](FNT.py) Main File of Fishing Net Topology, contains FNT class and Node class.**
-- **[Visualization:](Visualization.py) Draw graphs related to FNT.**
+- **[Graph:](Graph.py) Draw graphs related to FNT.**
 - **[Test:](Test.ipynb) Experiments and feature showcases.**
 
 ### User Guide:
 1. **Import libraries**
     ~~~
    import FNT
-   import Visualization
+   import Graph
     ~~~
 2. **Create FNT, insert nodes**
     ~~~
@@ -31,8 +31,9 @@
    fnt.disableNode(index)              # Detach a node
    fnt.printFNT()                      # Print all nodes
    
-   Visualization.drawFNT(rate, nodes)  # Draw the FNT graph
-   Visualization.drawCW(fnt)           # Draw the cw trend graph
+   Graph.drawFNT(rate, size)           # Draw the FNT graph
+   Graph.drawCWs(fnt)                  # Draw a graph to display the CWs of all nodes
+   Graph.drawCWChg(rate, size, index)  # Draw a graph to show the change of CW of a node as # of nodes increases
     ~~~
 
 ### Terminology:
@@ -48,8 +49,6 @@
 - **Rate:**
   - The data packet throughput in the network. 
   - The maximum number of packets going through the network at the same time.
-
-
 
 ### Structural Explanation:
 **Example with the rate of 6, including 100 nodes.**
