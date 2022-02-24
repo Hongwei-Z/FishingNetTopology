@@ -136,7 +136,7 @@ def drawCWs(f):  # Draw a graph to display the CWs of all nodes
     plt.xticks(np.arange(0, f.count, 1))
     plt.plot(n, cw, linewidth=3, color='b', marker='o', markerfacecolor='r')
     for a in range(len(cw)):
-        plt.text(n[a], cw[a], cw[a], ha='center', va='bottom', fontsize=20)
+        plt.text(n[a], cw[a], cw[a], ha='center', va='bottom', fontsize=15)
     plt.show()
 
 
@@ -152,6 +152,9 @@ def drawCWChg(rate, size, index):
         if b % 10 == 0:
             cws.append(f.findCW(index))
             interval.append(b)
+
+    cws.append(f.findCW(index))
+    interval.append(size)
 
     plt.figure(3, figsize=(15, 10))
     plt.title("The cumulative weight of node " + str(index) + " changes as the number of nodes increases")
