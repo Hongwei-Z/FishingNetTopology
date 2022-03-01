@@ -5,17 +5,17 @@ import numpy as np
 import FNT
 
 
-def drawFNT(rate, size):  # Draw the FNT graph
+def drawFNT(f):  # Draw the FNT graph
     fnt = nx.DiGraph()
 
     # Compute the number of nodes in triangle, and the rest nodes
-    nodes1 = math.comb(rate + 1, 2)
-    nodes2 = size - nodes1
+    nodes1 = math.comb(f.rate + 1, 2)
+    nodes2 = f.count - nodes1
 
     position = []  # Position of nodes
 
     # Find the positions of all nodes in the triangle
-    for x in range(rate):
+    for x in range(f.rate):
         y = x
 
         for i in range(x + 1):
@@ -24,24 +24,24 @@ def drawFNT(rate, size):  # Draw the FNT graph
 
     # Find the positions of rest nodes
     index = 0
-    x = rate
+    x = f.rate
     j = 0
 
     while j < nodes2:
 
-        y1 = rate - 2
-        y2 = rate - 1
+        y1 = f.rate - 2
+        y2 = f.rate - 1
 
         if index % 2 == 0:
 
-            for m in range(rate - 1):
+            for m in range(f.rate - 1):
                 position.append((x, y1))
                 y1 -= 2
                 j += 1
 
         else:
 
-            for n in range(rate):
+            for n in range(f.rate):
                 position.append((x, y2))
                 y2 -= 2
                 j += 1
@@ -50,7 +50,7 @@ def drawFNT(rate, size):  # Draw the FNT graph
         index += 1
 
     # Create nodes
-    for k in range(size):
+    for k in range(f.count):
         fnt.add_node(k, pos=position[k])
 
     # Add edges for all nodes in the triangle
@@ -58,7 +58,7 @@ def drawFNT(rate, size):  # Draw the FNT graph
     n = 0
     diff = []
 
-    for p in range(rate):
+    for p in range(f.rate):
 
         for g in range(p):
             diff.append((m, m + 1))
@@ -66,44 +66,44 @@ def drawFNT(rate, size):  # Draw the FNT graph
 
         m += 1
 
-    for q in range(nodes1 - rate):
+    for q in range(nodes1 - f.rate):
         fnt.add_edge(q + diff[q][0], q)
         fnt.add_edge(q + diff[q][1], q)
 
     # Add edges to rest of nodes
-    columns = rate * 2 - 1
+    columns = f.rate * 2 - 1
     diff2 = [(m, m - 1), (m - 1, m)]
     r = nodes1
     s = 0
 
-    while r < size:
+    while r < f.count:
 
-        if s < rate - 1:
+        if s < f.rate - 1:
 
-            for j in range(rate - 1):
+            for j in range(f.rate - 1):
 
-                if r < size:
+                if r < f.count:
                     fnt.add_edge(r, r - diff2[0][0])
                     fnt.add_edge(r, r - diff2[0][1])
                     r += 1
                     s += 1
 
-        elif (rate - 1) <= s < columns:
+        elif (f.rate - 1) <= s < columns:
 
             fnt.add_edge(r, r - columns)
             fnt.add_edge(r, r - diff2[1][0])
             r += 1
             s += 1
 
-            for j in range(rate - 2):
+            for j in range(f.rate - 2):
 
-                if r < size:
+                if r < f.count:
                     fnt.add_edge(r, r - diff2[0][0])
                     fnt.add_edge(r, r - diff2[0][1])
                     r += 1
                     s += 1
 
-            if r < size:
+            if r < f.count:
                 fnt.add_edge(r, r - diff2[1][1])
                 fnt.add_edge(r, r - columns)
                 r += 1
@@ -117,7 +117,7 @@ def drawFNT(rate, size):  # Draw the FNT graph
     plt.show()
 
     print("Fishing Net Topology")
-    print("Rate of {0}, {1} nodes.".format(rate, size))
+    print("Rate of {0}, {1} nodes.".format(f.rate, f.count))
 
 
 def drawCWs(f):  # Draw a graph to display the CWs of all nodes
@@ -140,28 +140,58 @@ def drawCWs(f):  # Draw a graph to display the CWs of all nodes
     plt.show()
 
 
-def drawCWChg(rate, size, index):
+def drawCWChg(f, index):
     # Draw a graph of the change of the CW of a node as the number of nodes increases
 
     cws = []
     interval = []
-    f = FNT.FishingNet(rate)
+    f2 = FNT.FishingNet(f.rate)
 
-    for b in range(size):
-        f.nextNode(None, None)
+    for b in range(f.count):
+        f2.nextNode(None, None)
         if b % 10 == 0:
-            cws.append(f.findCW(index))
+            cws.append(f2.findCW(index))
             interval.append(b)
 
-    cws.append(f.findCW(index))
-    interval.append(size)
+    cws.append(f2.findCW(index))
+    interval.append(f2.count)
 
     plt.figure(3, figsize=(15, 10))
     plt.title("The cumulative weight of node " + str(index) + " changes as the number of nodes increases")
     plt.xlabel("Total Nodes")
     plt.ylabel("Cumulative Weight of Node " + str(index))
-    plt.xticks(np.arange(0, size, 10))
+    plt.xticks(np.arange(0, f.count, 10))
     for c in range(len(cws)):
         plt.text(interval[c], cws[c], cws[c], ha='center', va='bottom', fontsize=20)
     plt.plot(interval, cws, linewidth=3, color='b', marker='o', markerfacecolor='r')
+    plt.show()
+
+
+def drawThroughput(f):  # Draw the graph to show the throughput of each layer
+    throughput = []
+
+    for d in range(1, f.rate + 1):
+        throughput.append(d)
+
+    rest = f.count - math.comb(f.rate + 1, 2)
+
+    while rest - f.rate + 1 >= 0 or rest - f.rate >= 0:
+
+        if rest - f.rate + 1 >= 0:
+            throughput.append(f.rate - 1)
+            rest -= (f.rate - 1)
+        if rest - f.rate >= 0:
+            throughput.append(f.rate)
+            rest -= f.rate
+
+    if rest > 0:
+        throughput.append(rest)
+
+    layers = np.arange(1, len(throughput) + 1)
+
+    plt.figure(4, figsize=(15, 10))
+    plt.title("The throughput of each layer")
+    plt.xlabel("Layers")
+    plt.ylabel("Throughput")
+    plt.plot(layers, throughput, linewidth=3, color='b', marker='o', markerfacecolor='r')
     plt.show()

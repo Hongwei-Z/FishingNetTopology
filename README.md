@@ -31,9 +31,10 @@
    fnt.disableNode(index)              # Detach a node
    fnt.printFNT()                      # Print all nodes
    
-   Graph.drawFNT(rate, size)           # Draw the FNT graph
-   Graph.drawCWs(fnt)                  # Draw a graph to display the CWs of all nodes
-   Graph.drawCWChg(rate, size, index)  # Draw a graph to show the change of CW of a node as # of nodes increases
+   Graph.drawFNT(fnt)                  # Draw a FNT graph
+   Graph.drawCWs(fnt)                  # Show the cumulative weight of all nodes
+   Graph.drawCWChg(fnt, index)         # Show the growth of CW of a node as number of nodes increases
+   Graph.drawThroughput(fnt)           # Show the throughput of each layer
     ~~~
 
 ### Terminology:
