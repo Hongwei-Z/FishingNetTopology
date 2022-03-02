@@ -8,7 +8,8 @@
 ### Files:
 - **[FNT:](FNT.py) Main File of Fishing Net Topology, contains FNT class and Node class.**
 - **[Graph:](Graph.py) Draw graphs related to FNT.**
-- **[Test:](Test.ipynb) Experiments and feature showcases.**
+- **[ExperimentData:](ExperimentData.ipynb) Data presentation and experimentation.**
+- **[ExperimentChart:](ExperimentChart.ipynb) Graphical presentation and experimentation.**
 
 ### User Guide:
 1. **Import libraries**
@@ -30,11 +31,16 @@
    fnt.findSubnet(index)               # Find all nodes that directly or indirectly approved this node
    fnt.disableNode(index)              # Detach a node
    fnt.printFNT()                      # Print all nodes
+   fnt.findThroughput():               # Return the list of throughput at each layer
+   fnt.findUtilization():              # Calculate the utilization of each layer
+   fnt.findWaste():                    # Calculate the waste rate of each layer
    
    Graph.drawFNT(fnt)                  # Draw a FNT graph
    Graph.drawCWs(fnt)                  # Show the cumulative weight of all nodes
    Graph.drawCWChg(fnt, index)         # Show the growth of CW of a node as number of nodes increases
    Graph.drawThroughput(fnt)           # Show the throughput of each layer
+   Graph.drawUtilization(fnt):         # Show the utilization of each layer
+   Graph.drawWasteRate(fnt):           # Show the waste rate of each layer
     ~~~
 
 ### Terminology:

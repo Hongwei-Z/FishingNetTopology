@@ -225,6 +225,39 @@ class FishingNet(object):
     def findSubnet(self, index):  # Return all nodes that directly or indirectly approved this node
         return self.findCW(index, True)
 
+    def findThroughput(self):  # Return the list of throughput at each layer
+        throughput = []
+
+        for k in range(1, self.rate + 1):
+            throughput.append(k)
+
+        rest = self.count - math.comb(self.rate + 1, 2)
+
+        while rest - self.rate + 1 >= 0 or rest - self.rate >= 0:
+
+            if rest - self.rate + 1 >= 0:
+                throughput.append(self.rate - 1)
+                rest -= (self.rate - 1)
+            if rest - self.rate >= 0:
+                throughput.append(self.rate)
+                rest -= self.rate
+        if rest > 0:
+            throughput.append(rest)
+
+        return throughput
+
+    def findUtilization(self):  # Calculate the utilization of each layer
+        tp = self.findThroughput()
+        ut = [m / self.rate for m in tp]
+
+        return ut
+
+    def findWaste(self):  # Calculate the waste rate of each layer
+        ut = self.findUtilization()
+        ws = [1 - s for s in ut]
+
+        return ws
+
     def printFNT(self):  # Print all nodes
 
         for i in range(len(self.nodes)):

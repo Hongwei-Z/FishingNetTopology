@@ -168,30 +168,36 @@ def drawCWChg(f, index):
 
 
 def drawThroughput(f):  # Draw the graph to show the throughput of each layer
-    throughput = []
-
-    for d in range(1, f.rate + 1):
-        throughput.append(d)
-
-    rest = f.count - math.comb(f.rate + 1, 2)
-
-    while rest - f.rate + 1 >= 0 or rest - f.rate >= 0:
-
-        if rest - f.rate + 1 >= 0:
-            throughput.append(f.rate - 1)
-            rest -= (f.rate - 1)
-        if rest - f.rate >= 0:
-            throughput.append(f.rate)
-            rest -= f.rate
-
-    if rest > 0:
-        throughput.append(rest)
-
-    layers = np.arange(1, len(throughput) + 1)
+    tp = f.findThroughput()
+    layers = np.arange(1, len(tp) + 1)
 
     plt.figure(4, figsize=(15, 10))
     plt.title("The throughput of each layer")
     plt.xlabel("Layers")
     plt.ylabel("Throughput")
-    plt.plot(layers, throughput, linewidth=3, color='b', marker='o', markerfacecolor='r')
+    plt.plot(layers, tp, linewidth=3, color='b', marker='o', markerfacecolor='r')
+    plt.show()
+
+
+def drawUtilization(f):  # Draw the graph to show the utilization of each layer
+    ut = f.findUtilization()
+    layers = np.arange(1, len(ut) + 1)
+
+    plt.figure(5, figsize=(15, 10))
+    plt.title("The utilization of each layer")
+    plt.xlabel("Layers")
+    plt.ylabel("Utilization")
+    plt.plot(layers, ut, linewidth=3, color='b', marker='o', markerfacecolor='r')
+    plt.show()
+
+
+def drawWasteRate(f):  # Draw the graph to show the waste rate of each layer
+    ws = f.findWaste()
+    layers = np.arange(1, len(ws) + 1)
+
+    plt.figure(6, figsize=(15, 10))
+    plt.title("The waste rate of each layer")
+    plt.xlabel("Layers")
+    plt.ylabel("Waste Rate")
+    plt.plot(layers, ws, linewidth=3, color='b', marker='o', markerfacecolor='r')
     plt.show()
