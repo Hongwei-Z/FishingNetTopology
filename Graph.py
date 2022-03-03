@@ -175,6 +175,8 @@ def drawThroughput(f):  # Draw the graph to show the throughput of each layer
     plt.title("The throughput of each layer")
     plt.xlabel("Layers")
     plt.ylabel("Throughput")
+    for d in range(len(tp)):
+        plt.text(layers[d], tp[d], tp[d], ha='center', va='bottom', fontsize=20)
     plt.plot(layers, tp, linewidth=3, color='b', marker='o', markerfacecolor='r')
     plt.show()
 
@@ -187,6 +189,9 @@ def drawUtilization(f):  # Draw the graph to show the utilization of each layer
     plt.title("The utilization of each layer")
     plt.xlabel("Layers")
     plt.ylabel("Utilization")
+    plt.ylim(0, 1.1)
+    for e in range(len(ut)):
+        plt.text(layers[e], ut[e], "{:.1%}".format(ut[e]), ha='center', va='bottom', fontsize=20)
     plt.plot(layers, ut, linewidth=3, color='b', marker='o', markerfacecolor='r')
     plt.show()
 
@@ -199,5 +204,23 @@ def drawWasteRate(f):  # Draw the graph to show the waste rate of each layer
     plt.title("The waste rate of each layer")
     plt.xlabel("Layers")
     plt.ylabel("Waste Rate")
+    plt.ylim(0, 1.1)
+    for h in range(len(ws)):
+        plt.text(layers[h], ws[h], "{:.1%}".format(ws[h]), ha='center', va='bottom', fontsize=20)
     plt.plot(layers, ws, linewidth=3, color='b', marker='o', markerfacecolor='r')
+    plt.show()
+
+
+def drawCumWaste(f):  # Draw the graph to show the cumulative waste rate
+    cws = f.findCumWaste()
+    layers = np.arange(1, len(cws) + 1)
+
+    plt.figure(7, figsize=(15, 10))
+    plt.title("The cumulative waste rate")
+    plt.xlabel("Layers")
+    plt.ylabel("Cumulative Waste Rate")
+    plt.ylim(0, 1.1)
+    for g in range(len(cws)):
+        plt.text(layers[g], cws[g], "{:.2%}".format(cws[g]), ha='center', va='bottom', fontsize=20)
+    plt.plot(layers, cws, linewidth=3, color='b', marker='o', markerfacecolor='r')
     plt.show()

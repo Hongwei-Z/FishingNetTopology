@@ -241,6 +241,7 @@ class FishingNet(object):
             if rest - self.rate >= 0:
                 throughput.append(self.rate)
                 rest -= self.rate
+
         if rest > 0:
             throughput.append(rest)
 
@@ -257,6 +258,20 @@ class FishingNet(object):
         ws = [1 - s for s in ut]
 
         return ws
+
+    def findCumWaste(self):  # Compute cumulative waste
+        tp = self.findThroughput()
+        cw = [self.rate - w for w in tp]
+
+        cwa = []
+        x = 0
+        for z in cw:
+            x += z
+            cwa.append(x)
+        for y in range(1, len(cwa) + 1):
+            cwa[y - 1] /= self.rate * y
+
+        return cwa
 
     def printFNT(self):  # Print all nodes
 

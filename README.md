@@ -34,6 +34,7 @@
    fnt.findThroughput():               # Return the list of throughput at each layer
    fnt.findUtilization():              # Calculate the utilization of each layer
    fnt.findWaste():                    # Calculate the waste rate of each layer
+   fnt.findCumWaste():                 # Calculate the cumulative waste rate
    
    Graph.drawFNT(fnt)                  # Draw a FNT graph
    Graph.drawCWs(fnt)                  # Show the cumulative weight of all nodes
@@ -41,6 +42,7 @@
    Graph.drawThroughput(fnt)           # Show the throughput of each layer
    Graph.drawUtilization(fnt):         # Show the utilization of each layer
    Graph.drawWasteRate(fnt):           # Show the waste rate of each layer
+   Graph.drawCumWaste(fnt):            # Show the cumulative waste rate
     ~~~
 
 ### Terminology:
