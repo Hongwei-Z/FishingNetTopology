@@ -180,7 +180,7 @@ class FishingNet(object):
             ap2 = self.nodes[index].approve[1].getIndex()
             return [ap1, ap2]
 
-    def findApprove(self, index):  # Print two nodes that approve this node
+    def findApprover(self, index):  # Print two nodes that approve this node
         self.findNode(self.getAp(index)[0])
         self.findNode(self.getAp(index)[1])
 
@@ -249,13 +249,13 @@ class FishingNet(object):
 
     def findUtilization(self):  # Calculate the utilization of each layer
         tp = self.findThroughput()
-        ut = [m / self.rate for m in tp]
+        ut = [round(m / self.rate, 4) for m in tp]
 
         return ut
 
     def findWaste(self):  # Calculate the waste rate of each layer
         ut = self.findUtilization()
-        ws = [1 - s for s in ut]
+        ws = [round(1 - s, 4) for s in ut]
 
         return ws
 
@@ -271,6 +271,7 @@ class FishingNet(object):
         for y in range(1, len(cwa) + 1):
             cwa[y - 1] /= self.rate * y
 
+        cwa = [round(c, 4) for c in cwa]
         return cwa
 
     def printFNT(self):  # Print all nodes

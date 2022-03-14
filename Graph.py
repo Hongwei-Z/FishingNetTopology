@@ -112,7 +112,7 @@ def drawFNT(f):  # Draw the FNT graph
         else:
             s = 0
 
-    plt.figure(1, figsize=(30, 20))
+    plt.figure(1, figsize=(30, 15))
     nx.draw(fnt, position, with_labels=True)
     plt.show()
 
@@ -129,13 +129,11 @@ def drawCWs(f):  # Draw a graph to display the CWs of all nodes
         n.append(t)
 
     # Draw the line chart for cw
-    plt.figure(2, figsize=(30, 20))
+    plt.figure(2, figsize=(15, 10))
     plt.title("Cumulative weight of all nodes")
     plt.xlabel("Node Index")
     plt.ylabel("Cumulative Weight")
     plt.plot(n, cw, linewidth=3, color='b', marker='o', markerfacecolor='r')
-    for a in range(len(cw)):
-        plt.text(n[a], cw[a], cw[a], ha='center', va='bottom', fontsize=15)
     plt.show()
 
 
@@ -155,12 +153,10 @@ def drawCWChg(f, index):
     cws.append(f2.findCW(index))
     interval.append(f2.count)
 
-    plt.figure(3, figsize=(30, 20))
+    plt.figure(3, figsize=(15, 10))
     plt.title("The cumulative weight of node " + str(index) + " changes as the number of nodes increases")
     plt.xlabel("Total Nodes")
     plt.ylabel("Cumulative Weight of Node " + str(index))
-    for c in range(len(cws)):
-        plt.text(interval[c], cws[c], cws[c], ha='center', va='bottom', fontsize=10)
     plt.plot(interval, cws)
     plt.show()
 
@@ -169,7 +165,7 @@ def drawThroughput(f):  # Draw the graph to show the throughput of each layer
     tp = f.findThroughput()
     layers = np.arange(1, len(tp) + 1)
 
-    plt.figure(4, figsize=(30, 20))
+    plt.figure(4, figsize=(15, 10))
     plt.title("The throughput of each layer")
     plt.xlabel("Layers")
     plt.ylabel("Throughput")
@@ -181,7 +177,7 @@ def drawUtilization(f):  # Draw the graph to show the utilization of each layer
     ut = f.findUtilization()
     layers = np.arange(1, len(ut) + 1)
 
-    plt.figure(5, figsize=(30, 20))
+    plt.figure(5, figsize=(15, 10))
     plt.title("The utilization of each layer")
     plt.xlabel("Layers")
     plt.ylabel("Utilization")
@@ -194,7 +190,7 @@ def drawWasteRate(f):  # Draw the graph to show the waste rate of each layer
     ws = f.findWaste()
     layers = np.arange(1, len(ws) + 1)
 
-    plt.figure(6, figsize=(30, 20))
+    plt.figure(6, figsize=(15, 10))
     plt.title("The waste rate of each layer")
     plt.xlabel("Layers")
     plt.ylabel("Waste Rate")
@@ -207,7 +203,7 @@ def drawCumWaste(f):  # Draw the graph to show the cumulative waste rate
     cws = f.findCumWaste()
     layers = np.arange(1, len(cws) + 1)
 
-    plt.figure(7, figsize=(30, 20))
+    plt.figure(7, figsize=(15, 10))
     plt.title("The cumulative waste rate")
     plt.xlabel("Layers")
     plt.ylabel("Cumulative Waste Rate")
