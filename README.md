@@ -26,7 +26,7 @@
     ~~~
    fnt.findNode(index)                 # Print a node
    fnt.findTips(index)                 # Print tips for this node
-   fnt.findApprove(index)              # Find two nodes that approve this node
+   fnt.findApprover(index)             # Find two nodes that approved this node
    fnt.findCW(index)                   # Compute the cumulative weight for a node
    fnt.findSubnet(index)               # Find all nodes that directly or indirectly approved this node
    fnt.disableNode(index)              # Detach a node
