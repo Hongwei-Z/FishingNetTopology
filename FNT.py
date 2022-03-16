@@ -11,7 +11,7 @@ class Node(object):
         self.tip1 = tip1
         self.tip2 = tip2
 
-        self.approve = []
+        self.approver = []
         self.disable = False
 
     def getIndex(self):
@@ -67,23 +67,23 @@ class FishingNet(object):
 
                 t = self.nextTip()
                 node = Node(self.count, data, time, t, None)
-                t.approve.append(node)
+                t.approver.append(node)
 
             else:  # Other nodes of the initial network with two tips
 
                 t1 = self.nextTip()
                 t2 = self.nextTip()
                 node = Node(self.count, data, time, t1, t2)
-                t1.approve.append(node)
-                t2.approve.append(node)
+                t1.approver.append(node)
+                t2.approver.append(node)
 
         else:  # Nodes in the formal network
 
             t1 = self.nextTipGroup()[0]
             t2 = self.nextTipGroup()[1]
             node = Node(self.count, data, time, t1, t2)
-            t1.approve.append(node)
-            t2.approve.append(node)
+            t1.approver.append(node)
+            t2.approver.append(node)
 
         self.tipList.append([node, 0])
         self.nodes.append(node)
@@ -168,19 +168,19 @@ class FishingNet(object):
         if index >= self.count:
             return [None, None]
 
-        if len(self.nodes[index].approve) == 0:
+        if len(self.nodes[index].approver) == 0:
             return [None, None]
 
-        elif len(self.nodes[index].approve) == 1:
-            ap1 = self.nodes[index].approve[0].getIndex()
+        elif len(self.nodes[index].approver) == 1:
+            ap1 = self.nodes[index].approver[0].getIndex()
             return [ap1, None]
 
         else:
-            ap1 = self.nodes[index].approve[0].getIndex()
-            ap2 = self.nodes[index].approve[1].getIndex()
+            ap1 = self.nodes[index].approver[0].getIndex()
+            ap2 = self.nodes[index].approver[1].getIndex()
             return [ap1, ap2]
 
-    def findApprover(self, index):  # Print two nodes that approve this node
+    def findApprover(self, index):  # Print two nodes that approved this node
         self.findNode(self.getAp(index)[0])
         self.findNode(self.getAp(index)[1])
 
@@ -238,6 +238,7 @@ class FishingNet(object):
             if rest - self.rate + 1 >= 0:
                 throughput.append(self.rate - 1)
                 rest -= (self.rate - 1)
+
             if rest - self.rate >= 0:
                 throughput.append(self.rate)
                 rest -= self.rate
@@ -265,14 +266,24 @@ class FishingNet(object):
 
         cwa = []
         x = 0
+
         for z in cw:
             x += z
             cwa.append(x)
+
         for y in range(1, len(cwa) + 1):
             cwa[y - 1] /= self.rate * y
 
         cwa = [round(c, 4) for c in cwa]
         return cwa
+
+    def findWasteRate(self):  # Calculate the waste rate of entire network
+        Tn = math.comb(self.rate + 1, 2)
+        F = math.pow(self.rate, 2) + (2 * self.rate * ((self.count - Tn) / (2 * self.rate - 1)))
+        W = math.pow(self.rate, 2) - Tn + ((self.count - Tn) / (2 * self.rate - 1))
+        WR = '{:.4%}'.format(W / F)
+
+        return WR
 
     def printFNT(self):  # Print all nodes
 

@@ -26,7 +26,7 @@
     ~~~
    fnt.findNode(index)                 # Print a node
    fnt.findTips(index)                 # Print tips for this node
-   fnt.findApprove(index)              # Find two nodes that approve this node
+   fnt.findApprover(index)             # Find two nodes that approved this node
    fnt.findCW(index)                   # Compute the cumulative weight for a node
    fnt.findSubnet(index)               # Find all nodes that directly or indirectly approved this node
    fnt.disableNode(index)              # Detach a node
@@ -34,7 +34,8 @@
    fnt.findThroughput():               # Return the list of throughput at each layer
    fnt.findUtilization():              # Calculate the utilization of each layer
    fnt.findWaste():                    # Calculate the waste rate of each layer
-   fnt.findCumWaste():                 # Calculate the cumulative waste rate
+   fnt.findCumWaste():                 # Calculate the cumulative waste rate at each layer
+   fnt.findWasteRate():                # Calculate the waste rate of entire network
    
    Graph.drawFNT(fnt)                  # Draw a FNT graph
    Graph.drawCWs(fnt)                  # Show the cumulative weight of all nodes
@@ -44,20 +45,6 @@
    Graph.drawWasteRate(fnt):           # Show the waste rate of each layer
    Graph.drawCumWaste(fnt):            # Show the cumulative waste rate
     ~~~
-
-### Terminology:
-- **Initial Network:**
-  - The part that allows the network to progressively reach maximum throughput.
-  - The part used for network initialization, starting from node 0, each column has one more node than the previous one, until the number of nodes reaches the number of Rate. 
-  - Form a triangle.
-- **Formal Network:**
-  - The formal network is the main part of the FNT. 
-  - At this point, the network can reach maximum throughput.
-  - The number of nodes in the first column is equal to Rate, and the second column is one smaller than Rate, these two columns form a Group.
-  - The structure of the formal network is the repetition of the Group.
-- **Rate:**
-  - The data packet throughput in the network. 
-  - The maximum number of packets going through the network at the same time.
 
 ### Structural Explanation:
 **Example with the rate of 6, including 100 nodes.**
