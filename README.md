@@ -8,8 +8,8 @@
 ### Files:
 - **[FNT:](FNT.py) Main File of Fishing Net Topology, contains FNT class and Node class.**
 - **[Graph:](Graph.py) Draw graphs related to FNT.**
-- **[ExperimentData:](ExperimentData.ipynb) Data presentation and experimentation.**
-- **[ExperimentChart:](ExperimentChart.ipynb) Graphical presentation and experimentation.**
+- **[TestFNT:](TestFNT.ipynb) Data presentation and experimentation.**
+- **[TestGraph:](TestGraph.ipynb) Graphical presentation and experimentation.**
 
 ### User Guide:
 1. **Import libraries**
