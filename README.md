@@ -1,5 +1,9 @@
 # May 2022, File Expired, pending update...
 
+
+
+
+
 # Fishing Net Topology
 **A Novel Blockchain Structure for WSNs Based on IOTA Tangle**
 
@@ -8,10 +12,10 @@
 ![FNT Structure Display](image/FNT_Structure.png)
 
 ### Files:
-- **[FNT:](Demo Version/FNT.py) Main File of Fishing Net Topology, contains FNT class and Node class.**
-- **[Graph:](Demo Version/Graph.py) Draw graphs related to FNT.**
-- **[TestFNT:](Demo Version/TestFNT.ipynb) Data presentation and experimentation.**
-- **[TestGraph:](Demo Version/TestGraph.ipynb) Graphical presentation and experimentation.**
+- **[FNT:](SimplifiedVersion/SimplifiedFNT.py) Main File of Fishing Net Topology, contains FNT class and Node class.**
+- **[Graph:](SimplifiedVersion/Graph.py) Draw graphs related to FNT.**
+- **[TestFNT:](SimplifiedVersion/TestFNT.ipynb) Data presentation and experimentation.**
+- **[TestGraph:](SimplifiedVersion/TestGraph.ipynb) Graphical presentation and experimentation.**
 
 ### User Guide:
 1. **Import libraries**
