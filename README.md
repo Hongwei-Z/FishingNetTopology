@@ -1,60 +1,22 @@
-# May 2022, File Expired, pending update...
+# Fishing Net Topology (FNT)
+### A Novel Blockchain Structure for Wireless Sensor Networks Based on IOTA Tangle
 
+>![WSN and FNT](image/wsn.png)
+![FNT Structure Display](image/fnt.png)
 
+>Files
+>>DemoVersion: Simple implementation of concepts and basic functions.  
+>>>[DemoFNT:](DemoVersion/DemoFNT.py) The main class of the demo version of FNT.  
+>>>[DemoGraph:](DemoVersion/DemoGraph.py) The visualization class for the simplified version of FNT.  
+>>>[SampleFNT_1:](DemoVersion/SampleFNT_1.ipynb) Sample demo of DemoFNT class.  
+>>>[SampleFNT_2:](DemoVersion/SampleFNT_2.ipynb) Sample demo of DemoGraph class.  
+> 
+>>DevVersion: The version is currently under development and temporarily unavailable.
+>>>FNT: Main functions.  
+>>>Test: Test File.
 
+> Note: Please focus on DemoVersion, other files are in development.
 
+> Author: Hongwei Zhang
 
-# Fishing Net Topology
-**A Novel Blockchain Structure for WSNs Based on IOTA Tangle**
-
-### Structural Demonstration:
-**Example with the rate of 10, including 1000 nodes.**
-![FNT Structure Display](image/FNT_Structure.png)
-
-### Files:
-- **[FNT:](SimplifiedVersion/SimplifiedFNT.py) Main File of Fishing Net Topology, contains FNT class and Node class.**
-- **[Graph:](SimplifiedVersion/Graph.py) Draw graphs related to FNT.**
-- **[TestFNT:](SimplifiedVersion/TestFNT.ipynb) Data presentation and experimentation.**
-- **[TestGraph:](SimplifiedVersion/TestGraph.ipynb) Graphical presentation and experimentation.**
-
-### User Guide:
-1. **Import libraries**
-    ~~~
-   import FNT
-   import Graph
-    ~~~
-2. **Create FNT, insert nodes**
-    ~~~
-   fnt = FNT.FishingNet(rate)
-   fnt.nextNode(data, time)
-    ~~~
-3. **Functions**
-    ~~~
-   fnt.findNode(index)            # Print a node
-   fnt.findTips(index)            # Print tips for this node
-   fnt.findApprover(index)        # Find two nodes that approved this node
-   fnt.findCW(index)              # Compute the cumulative weight for a node
-   fnt.findSubnet(index)          # Find all nodes that directly or indirectly approved this node
-   fnt.disableNode(index)         # Detach a node
-   fnt.printFNT()                 # Print all nodes
-   fnt.findThroughput()           # Return the list of throughput at each layer
-   fnt.findUtilization()          # Calculate the utilization of each layer
-   fnt.findWaste()                # Calculate the waste rate of each layer
-   fnt.findCumWaste()             # Calculate the cumulative waste rate at each layer
-   fnt.findWasteRate()            # Calculate the waste rate of entire network
-   
-   Graph.drawFNT(fnt)             # Draw a FNT graph
-   Graph.drawCWs(fnt)             # Show the cumulative weight of all nodes
-   Graph.drawCWChg(fnt, index)    # Show the growth of CW of a node as number of nodes increases
-   Graph.drawThroughput(fnt)      # Show the throughput of each layer
-   Graph.drawUtilization(fnt)     # Show the utilization of each layer
-   Graph.drawWasteRate(fnt)       # Show the waste rate of each layer
-   Graph.drawCumWaste(fnt)        # Show the cumulative waste rate
-    ~~~
-
-### Structural Explanation:
-**Example with the rate of 6, including 100 nodes.**
-![FNT Structure Explain](image/Explain.png)
-
-### Author
-**Hongwei Zhang**
+> Last Update: May 10, 2022

@@ -2,7 +2,7 @@ import math
 import networkx as nx
 import matplotlib.pyplot as plt
 import numpy as np
-import SimplifiedFNT
+import DemoFNT
 
 
 def drawFNT(f):  # Draw the FNT graph
@@ -142,7 +142,7 @@ def drawCWChg(f, index):
 
     cws = []
     interval = []
-    f2 = SimplifiedFNT.FishingNet(f.rate)
+    f2 = DemoFNT.FishingNet(f.rate)
 
     for b in range(f.count):
         f2.nextNode(None, None)
