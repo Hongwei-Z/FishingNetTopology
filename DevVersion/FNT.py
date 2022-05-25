@@ -1,10 +1,3 @@
-# Node: Node ID, Timestamp.
-class Node(object):
-    def __init__(self, nid, timestamp):
-        self.nid = nid
-        self.timestamp = timestamp
-
-
 # Sensor: Sensor ID, Status, Location.
 class Sensor(object):
     def __init__(self, sid, status, location):
@@ -13,21 +6,32 @@ class Sensor(object):
         self.location = location
 
 
-# Database: Data Type, Data.
-class Database(object):
+# Dataset: Data Type, Data.
+class Dataset(object):
     def __init__(self, datatype, data):
         self.datatype = datatype
         self.data = data
 
 
-class Packet(Node, Sensor, Database):
+class Packet(Sensor, Dataset):
 
-    def __init__(self, nid, timestamp, sid, status, location, datatype, data):
+    def __init__(self, pid, timestamp, auditee1, auditee2, sid, status, location, datatype, data):
 
-        Node.__init__(self, nid, timestamp)
         Sensor.__init__(self, sid, status, location)
-        Database.__init__(self, datatype, data)
+        Dataset.__init__(self, datatype, data)
 
-        print("NID: {0}, Time: {1}".format(nid, timestamp))
-        print("SID: {0}, Status: {1}, Location: {2}".format(sid, status, location))
-        print("Data Type: {0}, Data: {1}".format(datatype, data))
+        self.pid = pid
+        self.timestamp = timestamp
+        self.auditee1 = auditee1
+        self.auditee2 = auditee2
+        self.auditor = []
+        self.disable = False
+
+    def print_packet(self):
+        print("Packet: ")
+        print("PID: {0}, Time: {1}, Auditee: {2}, {3}".format(self.pid, self.timestamp, self.auditee1, self.auditee2))
+        print("SID: {0}, Status: {1}, Location: {2}".format(self.sid, self.status, self.location))
+        print("Data Type: {0}, Data: {1}".format(self.datatype, self.data))
+
+
+

@@ -1,7 +1,7 @@
 import FNT
 
-n = FNT.Node("1", "2")
-s = FNT.Sensor("3", "4", "5")
-d = FNT.Database("6", "7")
-print("Packet:")
-packet = FNT.Packet(n.nid, n.timestamp, s.sid, s.status, s.location, d.datatype, d.data)
+s = FNT.Sensor("S1", "01", "Halifax")
+d = FNT.Dataset("Temperature", "18")
+
+packet = FNT.Packet(0, 1653510171, "0", "0", s.sid, s.status, s.location, d.datatype, d.data)
+packet.print_packet()
