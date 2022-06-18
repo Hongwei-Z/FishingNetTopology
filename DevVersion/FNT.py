@@ -1,5 +1,9 @@
+import math
+
+
 # Sensor: Sensor ID, Status, Location.
 class Sensor(object):
+
     def __init__(self, sid, status, location):
         self.sid = sid
         self.status = status
@@ -8,6 +12,7 @@ class Sensor(object):
 
 # Dataset: Data Type, Data.
 class Dataset(object):
+
     def __init__(self, datatype, data):
         self.datatype = datatype
         self.data = data
@@ -16,11 +21,9 @@ class Dataset(object):
 # Packet: Packet ID, Timestamp, Auditee, Auditor, Sensor Info, Dataset.
 class Packet(Sensor, Dataset):
 
-    def __init__(self, pid, timestamp, auditee1, auditee2, sid, status, location, datatype, data):
-
+    def __init__(self, pid, timestamp, sid, status, location, datatype, data, auditee1, auditee2):
         Sensor.__init__(self, sid, status, location)
         Dataset.__init__(self, datatype, data)
-
         self.pid = pid
         self.timestamp = timestamp
         self.auditee1 = auditee1
@@ -37,7 +40,6 @@ class Packet(Sensor, Dataset):
     def get_auditee(self):
         a1 = self.auditee1
         a2 = self.auditee2
-
         if a1 is None and a2 is None:
             return [None, None]
         elif a1 is not None and a2 is None:
@@ -69,5 +71,29 @@ class Packet(Sensor, Dataset):
         print("Data: {0} = {1}".format(self.datatype, self.data))
 
     def print_packet(self):
-        print("Packet ID: {0}, Timestamp: {1}, Auditee: [{2}, {3}]"
-              .format(self.pid, self.timestamp, self.auditee1, self.auditee2))
+        print("Packet ID: {0}, Timestamp: {1}, Auditee: {2}".format(self.pid, self.timestamp, self.get_auditee()))
+
+
+class FishingNet(object):
+    def __init__(self, rate):
+        self.pid = 0
+        self.rate = rate
+        self.packets = []
+        self.auditeeList = []
+
+        self.group = self.rate * 2 - 1  # Each group in FNT contains (rate * 2 - 1) packets.
+        self.countInitial = math.comb(self.rate + 1, 2)  # Counting nodes in the initial network
+
+        edges = []  # Special nodes on the edge of the initial network.
+        for n in range(1, self.rate):
+            upper = int(n * (n + 1) / 2)
+            lower = upper + n
+            edges.append(upper)
+            edges.append(lower)
+        self.bound = edges
+
+    def new_packet(self, timestamp, sid, status, location, datatype, data):  # Create a new packet.
+
+        if self.pid == 0:  # First packet #0.
+            packet = Packet(self.pid, timestamp, sid, status, location, datatype, data, None, None)
+
