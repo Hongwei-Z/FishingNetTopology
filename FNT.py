@@ -1,7 +1,7 @@
 import math
 
 
-# Sensor: SensorID, Status, Location.
+# Sensor: Sensor ID, Status, Location.
 class Sensor(object):
 
     def __init__(self, sid, status, location):
@@ -18,7 +18,7 @@ class Dataset(object):
         self.data = data
 
 
-# Packet: PacketID, Timestamp, Auditee, Auditor, Sensor Info, Dataset.
+# Packet: Packet ID, Timestamp, Auditee, Auditor, Sensor Info, Dataset.
 class Packet(Sensor, Dataset):
 
     def __init__(self, pid, timestamp, sid, status, location, datatype, data, auditee1, auditee2):
@@ -73,20 +73,30 @@ class Packet(Sensor, Dataset):
         return self.data
 
     def print_sensor(self):
-        print("SensorID: {0}, Status: {1}, Location: {2}".format(self.sid, self.status, self.location))
+        if self is None:
+            return
+        print("Sensor ID: {0}, Status: {1}, Location: {2}."
+              .format(self.sid, self.status, self.location))
 
     def print_dataset(self):
-        print("Data: {0} = {1}".format(self.datatype, self.data))
+        if self is None:
+            return
+        print("Data: {0} is {1}.".format(self.datatype, self.data))
 
     def print_packet(self):
-        print("PacketID: {0}, Timestamp: {1}, Auditee: {2}".format(self.pid, self.timestamp, self.get_auditee()))
+        if self is None:
+            return
+        print("Packet ID: {0}, Timestamp: {1}, Auditee: {2}, Auditor: {3}."
+              .format(self.pid, self.timestamp, self.get_auditee(), self.get_auditor()))
 
     def print_detail(self):
-        print("PacketID: {0}, Timestamp: {1}, Auditee: {2}, Auditor: {3}."
+        if self is None:
+            return
+        print("Packet ID: {0}, Timestamp: {1}, Auditee: {2}, Auditor: {3}."
               .format(self.pid, self.timestamp, self.get_auditee(), self.get_auditor()),
               "SensorID: {0}, Status: {1}, Location: {2}."
               .format(self.sid, self.status, self.location),
-              "Data: {0} = {1}."
+              "Data: {0} is {1}."
               .format(self.datatype, self.data))
 
 
@@ -102,10 +112,10 @@ class FishingNet(object):
 
         edges = []  # Special packets on the edge of the initial network.
         for n in range(1, self.rate):
-            upper = int(n * (n + 1) / 2)
-            lower = upper + n
-            edges.append(upper)
-            edges.append(lower)
+            top = int(n * (n + 1) / 2)
+            bottom = top + n
+            edges.append(top)
+            edges.append(bottom)
         self.edge = edges
 
     def on_edge(self):  # Determine whether a packet is on the edge.
@@ -167,9 +177,59 @@ class FishingNet(object):
         else:  # Auditee for other packets.
             return [self.packets[self.pid - self.rate], self.packets[self.pid - self.rate + 1]]
 
-    def display_fnt(self):  # Print all nodes
+    def get_packet(self, index):  # Return a packet by index.
+        if index is None or index >= self.pid:
+            return
+
+        return self.packets[index]
+
+    def display_packet(self, index):  # Print details of a packet.
+        if index is None or index >= self.pid:
+            return
+        self.get_packet(index).print_detail()
+
+    def display_auditee(self, index):  # Print auditee of a packet.
+        if index is None or index >= self.pid:
+            return
+
+        adt1 = self.packets[index].get_auditee()[0]
+        adt2 = self.packets[index].get_auditee()[1]
+        self.display_packet(adt1)
+        self.display_packet(adt2)
+
+    def display_auditor(self, index):  # Print auditor of a packet.
+        if index is None or index >= self.pid:
+            return
+
+        ado1 = self.packets[index].get_auditor()[0]
+        ado2 = self.packets[index].get_auditor()[1]
+        self.display_packet(ado1)
+        self.display_packet(ado2)
+
+    def display_fnt(self):  # Print all packets.
         for i in range(len(self.packets)):
             if self.packets[i].disable is True:
-                print("Packet {0} disabled.".format(i))
+                print("Packet {0} is disabled.".format(i))
             else:
                 self.packets[i].print_detail()
+
+    def detach_packet(self, index):  # Detach a packet.
+        if index is None or index >= self.pid:
+            return
+
+        # TODO: bug fix
+        ado1 = self.packets[index].get_auditor()[0]
+        ado2 = self.packets[index].get_auditor()[1]
+        adt1 = self.packets[ado1].get_auditee()[0]
+        adt2 = self.packets[ado2].get_auditee()[1]
+
+        if adt1 == index:
+            self.packets[ado1].auditee1 = None
+        if adt1 == index:
+            self.packets[ado1].auditee2 = None
+        if adt2 == index:
+            self.packets[ado2].auditee1 = None
+        if adt2 == index:
+            self.packets[ado2].auditee2 = None
+
+        self.packets[index].disable = True
