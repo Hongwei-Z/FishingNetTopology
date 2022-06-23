@@ -1,18 +1,20 @@
 # Fishing Net Topology (FNT)
 ### A Novel Blockchain Structure for Wireless Sensor Networks Based on IOTA Tangle
 
-> Graphical Abstract: ![GraphicalAbstract](image/abstract.png)
+> Graphical Abstract: ![GraphicalAbstract](abstract.png)
 
->Files
+>We clarify the following terminology for the FNT:  
+Packet: refers to the packet that contains the sensor data.  
+Auditee: an entity in the FNT that is approved by the new node. It can also be referred to as the Tip.  
+Auditor: an entity in the FNT that approves the new node. It can also be referred to as the Approver.
+
+>Files:
 >>[FNT:](FNT.py) Main class of FNT.  
 >>[Demo:](Demo.ipynb) Function demonstration of FNT.
 > 
->>Version1: Simple implementation of concepts and basic functions.  
->>>[FNTVer1:](Version1/FNTVer1.py) The main class of the demo version of FNT.  
->>>[Graph:](Version1/Graph.py) The visualization class for the demo version of FNT.  
->>>[Ver1Demo1:](Version1/Ver1Demo1.ipynb) Sample demo of DemoFNT class.  
->>>[Ver1Demo2:](Version1/Ver1Demo2.ipynb) Sample demo of DemoGraph class.  
+>>Version1: FNT original proposal and simple implementation for generating graphs and experimental data in the paper.  
+>>>[Ver1Demo1:](Ver1Demo1.ipynb) Simple functional experiments.  
+>>>[Ver1Demo2:](Ver1Demo2.ipynb) Simple visualization experiments.  
 
-> Author: Hongwei Zhang
-> 
-> Last Update: June 22, 2022
+> Author: Hongwei Zhang  
+> Last Update: June 23, 2022
