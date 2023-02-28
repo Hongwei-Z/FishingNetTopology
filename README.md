@@ -6,9 +6,12 @@ Zhang, H.; Zaman, M.; Stacey, B.; Sampalli, S. A Novel Distributed Ledger Techno
 
 > Graphical Abstract: ![GraphicalAbstract](abstract.png)
 
->Files:  
-[FNT.py:](FNT.py) Main class of FNT.  
-[Demo.ipynb:](Demo.ipynb) Function demonstration of FNT.
+>File and Structure:  
+>>[FNT_Ver1.0](FNT_Ver1.0): Early concept preview and experimentation.
+>
+>>[FNT_Ver2.0](FNT_Ver2.0):  
+[FNT.py:](FNT_Ver2.0/FNT.py) Main class of FNT.  
+[Demo.ipynb:](FNT_Ver2.0/Demo.ipynb) Function demonstration of FNT.
 
 >Terminology Clarification:  
 Packet: refers to the packet that contains the sensor data.  
